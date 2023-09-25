@@ -8,6 +8,8 @@ using UnityAgent.Operation;
 using Scene.ConnectedAgentsMenu;
 using Scene.RosAgentInspectorMenu;
 
+namespace Scene.ConnectMenu
+{
 public class ConnectMenu : MonoBehaviour
 {
     public GameObject connectMenu;
@@ -157,4 +159,5 @@ public class ConnectMenu : MonoBehaviour
     {
         return connectButton.GetComponentInChildren<TextMeshProUGUI>();
     }
+}
 }
