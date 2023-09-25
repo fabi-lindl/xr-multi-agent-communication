@@ -1,0 +1,22 @@
+{
+    "agent_type": {
+        "num_items": 1,
+        "item_size": 1
+    },
+    "destination_agents": {
+        "num_items": 10,
+        "item_size": 2
+    },
+    "destination_groups": {
+        "num_items": 10,
+        "item_size": 1
+    },
+    "management_data_size": {
+        "num_items": 1,
+        "item_size": 4
+    },
+    "total_message_size": {
+        "num_items": 1,
+        "item_size": 4
+    }
+}

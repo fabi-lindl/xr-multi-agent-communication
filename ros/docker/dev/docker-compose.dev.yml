@@ -1,0 +1,16 @@
+version: "2"
+services:
+  rosrouter:
+    container_name: rosrouter
+    image: xr-ros:dev
+    working_dir: /home/ros2_ws
+    command: ["bash", "-c", "source install/setup.bash && ros2 run rosrouter rosrouter_node --ros-args -p ip_address:=0.0.0.0"]
+    ports:
+      - "7000:7000"
+  rosagent:
+    container_name: rosagent
+    image: xr-ros:dev
+    working_dir: /home/ros2_ws
+    command: ["bash", "-c", "source install/setup.bash && ros2 run rosagent rosagent_node --ros-args -p router_ip_address:=rosrouter"]
+    depends_on:
+      - rosrouter

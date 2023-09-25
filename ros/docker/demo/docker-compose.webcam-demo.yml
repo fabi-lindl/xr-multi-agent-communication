@@ -1,0 +1,22 @@
+version: "2"
+services:
+  rosagent:
+    container_name: rosagent
+    image: xr-ros:test
+    working_dir: /home/ros2_ws
+    command: ["bash", "-c", "source install/setup.bash && ros2 run rosagent rosagent_node --ros-args -p router_ip_address:=<IP_ADDRESS>"]
+  webcam-publisher:
+    container_name: webcam_publisher
+    image: xr-ros:test
+    working_dir: /home/ros2_ws
+    command: ["bash", "-c", "source install/setup.bash && ros2 run demo webcam_publisher"]
+    privileged: true
+    depends_on:
+      - rosagent
+  pose-subscriber:
+    container_name: pose_subscriber
+    image: xr-ros:test
+    working_dir: /home/ros2_ws
+    command: ["bash", "-c", "source install/setup.bash && ros2 run demo pose_subscriber"]
+    depends_on:
+      - rosagent
