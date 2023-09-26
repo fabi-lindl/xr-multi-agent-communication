@@ -1,60 +1,60 @@
 # ROS2 xr-multi-agent-communication implementation 
-*Note: Before you go ahead and read this README.md file, you should have read the README.md file in the root dir of this repository. It serves as a basic project overview.*
+*Note: Before you go ahead and read this README.md file, you should have read the README.md file in the root directory of this repository. It serves as a basic project overview.*
 
 ## Abstract
-The code stored in this dir of the repo represents the ROS side of the ROS2/Unity tandem project. It is essential to mention that the ROS code is written for ROS2 implementations.
+The code stored in this directory of the repo represents the ROS side of the ROS2/Unity tandem project. It is essential to note that the ROS code is written for ROS2 implementations.
 
-This directory is home to 2 sub-directories, namely *docker* and *ros_packages.* In the *ros_packages* dir all the ROS2 code that is necessary for running the ROS side of the multi-agent-network (MAN) is stored. It further entails ROS packages for the demo applications (see details below on how to run the demo). The *docker* dir entails Dockerfiles and docker-compose files that allow a quick set-up for development and running the demo applications.
+This directory is home to 2 subdirectories, namely *docker* and *ros_packages*. The *ros_packages* directory contains all the ROS2 code needed to run the ROS side of the multi-agent network (MAN). It also contains ROS packages for the demo applications (see below for details on how to run the demo). The *docker* directory contains dockerfiles and docker-compose files, which allow a quick setup for application development and running demo applications.
 
 ## docker
-Dockerfiles and docker compose files for development, testing, and running the demos are stored in this dir. Simple docker build and docker compose commands allow to run the code conainerized if you do not bother setting up a colcon workspace on your personal computer. Check out the section *How to run the code?* to see how the application can be run inside of docker containers.
+Dockerfiles and docker compose files for development, testing, and running the demos are stored in this directory. Simple docker build and docker compose commands allow you to run the code conainerized if you do not want to bother setting up a colcon workspace on your machine. Refer to the *How to run the code?* section to see how to run the application inside docker containers.
 
 ## ros_packages
 
 ### Multi-Agent-Network (MAN)
 
 #### rosagent
-This package must be run on any robot that is meant to connect to the multi-agent network. It enables the robot to connect to and communicate with the node on the MAN that is operating the rosrouter package. You can best think of this package as an interface between your ROS2 application and all other nodes on the multi-agent network.
+This package must be run on every robot that is meant to be connected to the MAN. It enables the robot to connect to and communicate with other agents online on the MAN. The best way to think of this package is as an interface between your ROS2 application and all other nodes online on the MAN.
 
-On start-up, this package tries to connect to the rosrouter. If a connection can be established, the rosrouter sends configuration data back to this rosagent. The rosagent uses this data to set itself up for the data exchange between itself and the rosrouter. Specifically, the rosrouter sends the rosagent an ID that uniquely identifies this rosagent during its lifetime on the MAN.
+On startup, this package attempts to connect to the rosrouter. If a connection can be established, the rosrouter sends configuration data back to this rosagent. The rosagent uses this data to set itself up for communication with the rosrouter. In particular, the rosrouter sends the rosagent an ID that uniquely identifies this rosagent during its lifetime on the MAN.
 
 #### rosrouter
-The rosrouter package is only run once on the MAN and is uniquely identified by an IP address and a port number. It is possible to run the rosrouter locally (e.g. on a desktop computer or a docker container), on a robot or on a cloud platform. Therefore, maximum flexibility for any further development is provided.
+The rosrouter package is run only once on the MAN and is uniquely identified by an IP address and a port number. It is possible to run the rosrouter locally (e.g. on a desktop computer or a docker container), on a robot or on a cloud platform. This provides maximum flexibility for future development.
 
-This package is responsible for routing traffic between the different agents that are currently online on the MAN.
+This package is responsible for routing traffic between agents that are currently online on the MAN.
 
 #### rosutility
 rosutility entails functionality that is shared between the rosagent and rosrouter packages. In order to run the rosagent or rosrouter packages, this package must be built with them.
 
 ### Demos
-In order to obtain a better understanding of the working details of the ROS side of the MAN, demo packages are made available. Two of the packages, namely *unity_robotics_demo* and *unity_robotics_demo_msgs* are copies of demo packages from Unity's Unity-Robotics-Hub repository (https://github.com/Unity-Technologies/Unity-Robotics-Hub/tree/main). Unity's *ROS TCP Connector* uses these 2 packages for demo purposes, too. The following paragraphs provide a brief description of the demo packages.
+To get a better understanding of the working details of the ROS side of the MAN, demo packages are provided. Two of the packages, namely *unity_robotics_demo* and *unity_robotics_demo_msgs* are copies of demo packages from Unity's Unity-Robotics-Hub repository (https://github.com/Unity-Technologies/Unity-Robotics-Hub/tree/main). Unity's *ROS TCP Connector* also uses these 2 packages for demo purposes. The following paragraphs provide a brief description of the demo packages.
 
 #### demo
 The demo package contains 4 ROS2 nodes to illustrate data exchange between different agents on the MAN. To illustrate subscriptions to a rosagent, image data generated by the rosagent can be sent to other agents on the MAN. To provide the rosagent with functionality to receive data from other MAN agents, a publisher node can be instantiated on the rosagent. Data sent to this publisher node is printed to the terminal by a subscriber node. 
 
-- **webcam_publisher.py**: Uses the cv2 package to capture webcam data at a continuous rate and publishes it to a ROS2 topic. Hence, during the development of this project this node was intended to run on a variety of platforms; however, it only works on Linux as other platforms, e.g. Macs and Windows machines, do not permit webcam access via cv2 commands.
+- **webcam_publisher.py**: Uses the cv2 package to continuously capture webcam data and publish it to a ROS2 topic. During the development of this project, this node was intended to run on a variety of platforms; however, it only works on Linux, as other platforms, such as Macs and Windows machines, do not permit webcam access via cv2 commands.
 - **image_publisher.py**: Publishes black images with a randomly colored diagonal stripe at a continuous rate. This node can be used instead of the webcam_publisher.py node as it works on all platforms.
-- **image_subscriber.py**: Subscribes to the topic that the image_publisher node publishes to and shows published images in a separate program window (this package is only intended to demonstrate that the image_publisher is working error free and publishing data).
+- **image_subscriber.py**: Subscribes to the topic that the image_publisher node publishes to, and displayes published images in a separate program window (this package is only intended to demonstrate that the image_publisher works and publishes data).
 - **pose_subscriber.py**: Subscribes to pose messages that are sent to the rosagent (on which this subscriber is running) and logs the data to the terminal.
 
 #### unity_robotics_demo (from Unity)
-This package is a copy of the ROS2 package stored on the Unity-Robotics-Hub under the same package name. It is leveraged by rosagents to subscribe to color messages received from other MAN agents and to send color messages to other MAN agents. Moreover, a ROS2 service node is implemented to handle requests from other MAN agents.
+This package is a copy of the ROS2 package stored on the Unity-Robotics-Hub under the same package name. It is used by rosagents to subscribe to color messages received from and to send color messages to other MAN agents. A ROS2 service node is also implemented to handle requests from other MAN agents.
 
 #### unity_robotics_demo_msgs (from Unity)
-The *unity_robotics_demo* ROS2 package implements nodes that send ROS messages of types defined in this package. This package must thus be built along with the unity_robotics_demo package (these two packages go hand-in-hand).
+The *unity_robotics_demo* ROS2 package implements nodes that send ROS messages of the types defined in this package. This package must thus be built together with the unity_robotics_demo package (these two packages go hand-in-hand).
 
 ## How to run the code?
 
 ### How to run the code on your machine in a colcon workspace?
 - Clone this repo
-- **Create the ROS2 workspace:** Create a new dir named *ros2_ws* in the *ros* dir (this is the ROS2 workspace dir and must have this name for the code to work as intended)
-- **Create the ROS2 packages dir:** Create a new dir named *src* in the newly created *ros2_ws* dir
-- Copy all the relevant ROS2 packages from the dir *ros_packages*, which is located inside the *ros* dir, to the newly created *src* dir
+- **Create the ROS2 workspace**: Create a new directory named *ros2_ws* in the *ros* directory (this is the ROS2 workspace directory and must have this name for the code to work as intended)
+- **Create the ROS2 packages directory**: Create a new directory named *src* in the newly created *ros2_ws* directory
+- Copy all the relevant ROS2 packages from the directory *ros_packages*, which is located inside the *ros* directory, to the newly created *src* directory
   - Running a rosagent: Copy the *rosagent* and *rosutility* packages only
   - Running a rosrouter: Copy the *rosrouter* and *rosutility* packages only
   - The packages demo, unity_robotics_demo, and unity_robotics_demo_msgs only need to be copied if you intend to run the demo applications
-- **Build the ROS2 packages:** Navigate into the *ros2_ws* dir and run *colcon build*
-- **Install the packages:** Run "source ./install/setup.bash" inside of the *ros2_ws* dir
+- **Build the ROS2 packages**: Navigate into the *ros2_ws* directory and run *colcon build*
+- **Install the packages**: Run "source ./install/setup.bash" inside of the *ros2_ws* directory
 
 #### Running a rosagent
 ```
@@ -74,10 +74,10 @@ Default ros-args are:
 - port = 7000
 
 ### How to run the code inside a provided docker container?
-Execute all points from the above title "*How to run the code on your machine in a colcon workspace?*", except the last two (workspace build and package installation).
+Execute all points from the above section "*How to run the code on your machine in a colcon workspace?*", except the last two (building the workspace and package installation).
 
 ##### Building the docker images
-- Navigate into the *ros* dir of this repository and run one or more of the following commands to build the docker images according to your needs:
+- Navigate to the *ros* directory of this repository and run one or more of the following commands to build the docker images according to your needs:
   - docker dev image (runs the rosrouter and rosagent packages):
     ```
     docker build -t xr-ros:dev -f ./docker/dev/Dockerfile .
@@ -92,7 +92,7 @@ Execute all points from the above title "*How to run the code on your machine in
     ```
 
 ##### Running docker containers from docker-compose files
-The docker-compose files are run from the directories in which they are stored. In order to run them, navigate into the dir of the docker-compose file you want to run and execute the following command (exchange FILE_NAME with the name of the file you want to execute):
+The docker-compose files are run from the directories in which they are stored. To run them, navigate to the directory of the docker-compose file you want to run and run the following command (replace FILE_NAME with the name of the file you want to run):
 ```
 docker compose -f docker-compose.<FILE_NAME>.yml up
 ```
@@ -100,7 +100,7 @@ docker compose -f docker-compose.<FILE_NAME>.yml up
 ### Running the demos (ROS2 side)
 
 #### Demo running rosrouter locally
-Navigate to "*root/ros/docker/test/*" and execute one of the following commands. The created suite of docker containers from the docker test images includes one container running the rosrouter. This enables running the whole demo locally.
+Navigate to "*root/ros/docker/test/*" and run one of the following commands. The suite of created docker containers from the docker test images includes one container running the rosrouter. This allows the entire demo to be run locally.
 
 #### Single-agent demo
 ```
