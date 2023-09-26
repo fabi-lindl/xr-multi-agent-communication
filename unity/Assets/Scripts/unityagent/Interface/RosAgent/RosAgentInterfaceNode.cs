@@ -105,8 +105,7 @@ public abstract class RosAgentInterfaceNode : AgentInterfaceNode
 
     public virtual bool RegisterGroups(List<byte> newGroupIds)
     {
-        if (newGroupIds == null)
-            return false;
+        if (newGroupIds == null) return false;
         List<byte> idsToAdd = GroupDifference(newGroupIds);
         groupIds.AddRange(idsToAdd);
         registrar.SendRegistrationMessage(idsToAdd);
@@ -124,8 +123,7 @@ public abstract class RosAgentInterfaceNode : AgentInterfaceNode
 
     public void DeregisterAgents(List<ushort> agentIds)
     {
-        if (agentIds == null)
-            return;
+        if (agentIds == null) return;
         List<ushort> idsToRemove = AgentIntersection(agentIds);
         foreach (ushort id in idsToRemove)
             agentIds.Remove(id);
@@ -150,8 +148,7 @@ public abstract class RosAgentInterfaceNode : AgentInterfaceNode
 
     public void DeregisterGroups(List<byte> groupIds)
     {
-        if (groupIds == null)
-            return;
+        if (groupIds == null) return;
         List<byte> idsToRemove = GroupIntersection(groupIds);
         foreach (byte id in idsToRemove)
             groupIds.Remove(id);

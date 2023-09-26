@@ -23,7 +23,44 @@ The following files and directories are only relevant for local development and 
 - *.csproj
 
 ### How to use the code?
+The following is a brief description of the classes that you will need to make use of as a user of the MACS.
 
+#### Agent
+This singleton class represents the unityagent. It establishes a connection with the rosrouter, configures this unityagent, and handles message sending and reception. Hence, it serves as the starting point for using the MACS and connects your application to the MAN.
+
+To utilize the Agent class, instantiate it and call its Run method before any communication with other agents on the MAN. An approach showcased in the demo applications is to create and launch the Agent in the Awake or Start method. In doing so, the unityagent is connected to the MAN before the initial frame rendering in play mode. Additionally, the Run method enables a connection to a rosrouter on a designated IP address and port. It also allows the unityagent to be assigned a group id, if required.
+
+```
+Agent agent = Agent.Instance;
+agent.Run();
+```
+
+#### RosAgentInterfaceNodesRegistryManager
+This class manages registration and deregistration of rosagent interface nodes (publishers, subscribers, services, clients) to permit rosagents communication with unityagents.
+
+The code snippet below demonstrates registering a rosagent interface subscriber node. The process is analogous for the other three types of rosagent interface nodes.
+
+```
+registryManager = RosAgentInterfaceNodesRegistryManager.Instance;
+subscriberNode = registryManager.RegisterInterfaceSubscriberNode<RosColor>(ChangeCubeColor, topicName, agentIds);
+```
+
+#### RosAgentInterfaceNode
+This class represents the base class of the 4 different rosagent interface node types. As this class is abstract, the interaction is done with its 4 subclasses representing the rosagent interface node types. The base functionality, e.g. registration of interface nodes on rosagents, is implemented in this class.
+
+The following classes represent the rosagent interface nodes. For each node type exists one C# class.
+
+#### RosAgentInterfacePublisherNode
+Enables publication of ROS messages to rosagents from the unityagent.
+
+#### RosAgentInterfaceSubscriberNode
+Enables subscription to ROS messages that are published on rosagents.
+
+#### RosAgentInterfaceServiceNode
+Enables rosagents to make requests to service functionality on unityagents (a rosagent calls a service running on a unityagent).
+
+#### RosAgentInterfaceClientNode
+Enables unityagents to make requests to ROS services running on rosagents (a unityagent calls a service running on a rosagent).
 
 ## Demos and Tests
 The project includes two Unity scenes that are available for running tests and demos.
