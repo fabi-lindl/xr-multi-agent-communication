@@ -6,14 +6,14 @@ The code stored in this directory of the repo represents the Unity side of the R
 
 ## Creating the project
 To be able to create a Unity project from the code of this repo you must first:
-- **Download and install the Unity Hub** (https://unity.com/download): The Unity Hub is a program that helps developers to effectively manage Unity projects. It allows to install different versions of Unity so that a specific version can be selected for working on any of your projects. Also, it provides easy install options if further modules are needed for a project later on during development time, which is not possible if a Unity Editor is installed via the normal installer executables.
-- **Install a Unity Editor**: The Unity Editor is the software that allows you to create your applications and are managed from the Unity Hub. After opening Unity Hub on your computer, click on "Installs" on the left menu bar and then click on "Install Editor." Install one of the LTS version that are recommended to you. If you decide to install an older version, you can visit Unity's download archive for such versions. It is vital to select the download for Unity Hub option on this page! Using the installers, e.g. for Windows, prevents any extension of the downloaded Unity Editor with additional modules after its installation.
+- **Download and install the Unity Hub** (https://unity.com/download): The Unity Hub is a program that helps developers to effectively manage Unity projects. It allows to install different versions of Unity so that a specific version can be selected for working on any of your projects. Also, it provides easy install options if further modules are needed for a project later on during development time, which is not possible if a Unity Editor is installed via platform specific executables.
+- **Install a Unity Editor**: The Unity Editor is software that allows you to create your Unity applications. After opening Unity Hub on your computer, click on "Installs" on the left menu bar and then click on "Install Editor." Install one of the LTS version that are recommended. If you decide to install an older version, visit Unity's download archive to find your desired version. It is vital to select the download for Unity Hub option on this page. Using platform dependent installer executables prevents any extension of the downloaded Unity Editor with additional modules after its installation.
 - **Create a Unity project from the code in this repo**: *Try out how this can be done...*
 
 ## Working on the project
 
 ### Local project files that are ignored by the repository
-The following files and directories are only relevant for local development and must thus ignored by any pushes to the repo:
+The following files and directories are only relevant for local development and must thus be ignored by any pushes to the repo:
 - Library/
 - Logs/
 - Temp/
@@ -26,40 +26,41 @@ The following files and directories are only relevant for local development and 
 
 
 ## Demos and Tests
-The project includes 2 scenes:
+The project includes two Unity scenes that are available for running tests and demos.
 
 ### BasicTestScene
-Tests the 4 different communication strategies between a UnityAgent and a RosAgent. This scene also serves to get a better understanding of how UnityAgents and RosAgents communicate with each other. Credit for the idea of these 4 basic tests is given to Unity and their demo application for testing network communication between the "ROS TCP Connector" and "ROS TCP Endpoint" applications that can be downloaded from their GitHub repo (https://github.com/Unity-Technologies/Unity-Robotics-Hub/tree/main).
+Tests the 4 different communication variants between unity- and rosagents. This scene also serves to get a better understanding of how unityagents and rosagents communicate with each other. Credit for the idea of these 4 basic tests is given to Unity. Their demo for testing network communication between the "ROS TCP Connector" and "ROS TCP Endpoint" applications works similarly (https://github.com/Unity-Technologies/Unity-Robotics-Hub/tree/main).
 
 ### DemoScene
-This scene was specifically developed as a demo application to demonstrate the multi-agent capabilities of the application. Moreover, it demonstrates how the multi-agent functionality of the MACS can be leveraged by applications that build on top of it.
+This scene was specifically developed as a demo application to demonstrate the multi-agent functionality of the application. Moreover, it demonstrates how the multi-agent functionality of the MACS can be leveraged by applications that build on top of it.
 
 ### Running the BasicTestScene
-Before a test can be started in the Unity Editor, a rosagent and a rosrouter instance must be running. Follow the instructions in the README.md file in the *ros* directory of this repo on how to build and install the ROS2 workspace on your computer. Once the colcon workspace is built and the ROS2 packages are installed, three terminals must be opened. One terminal is used to run the rosrouter, another one is used to run the rosagent, and the last terminal allows for entering the test commands.
-- 1st terminal runs the rosrouter
+Before a test can be started in the Unity Editor, a rosagent and a rosrouter instance must be running. Follow the instructions in the README.md file in the *ros* directory of this repo on how to build and install the ROS2 workspace on your computer. Once the colcon workspace is built and the ROS2 packages are installed, three terminals must be opened. One terminal is used to run the rosrouter, another one is used to run the rosagent, and the last terminal allows for entering test commands.
+- 1<sup>st</sup> terminal runs the rosrouter
   ```
   ros2 run rosrouter rosrouter_node
   ```
-- 2nd terminal runs the rosagent
+- 2<sup>nd</sup> terminal runs the rosagent
   ```
   ros2 run rosgent rosagent_node
   ```
-- 3rd terminal runs commands for the respective test
+- 3<sup>rd</sup> terminal runs commands for the respective test
 
-Five different tests can be run. Each of them must be run in isolation, i.e. no two or more tests can be executed simultaneously. To run a test, activate the concerend game object in the Unity BasicTestScene and hit the play button (as mentioned above, the rosrouter and rosagent instance must already be running).
-- **TestRosPublisher**: The unityagent sends the pose data of the cube located in the scene on a continuous basis to the rosagent. To make the data visible on the rosagent, use the 3rd terminal you opened up and type in the following ROS2 command:
+#### The tests
+Five different tests can be run. Each of them must be run in isolation, i.e. no two or more tests can be executed simultaneously. To run a test, activate the concerend game object in the Unity BasicTestScene and hit the play button (as mentioned above, the rosrouter and rosagent instances must already be running).
+- **TestRosPublisher**: The unityagent sends pose data of the game object cube in the Unity scene on a continuous basis to the rosagent. To make the data visible on the rosagent, use the 3<sup>rd</sup> terminal you opened up and type in the following ROS2 command.<br>
   ```
   ros2 topic echo pos_rot
   ```
-- **TestRosSubscriber**: Change the color of the cube located in the Unity scene by typing the following command into the 3rd terminal and hit enter. This command sends a color message from the rosagent to the unityagent. On every run, a color is selected randomly.
+- **TestRosSubscriber**: Change the color of the cube located in the Unity scene by executing the following command from the 3<sup>rd</sup> terminal. This command sends a color message from the rosagent to the unityagent. On every run, a new color is selected randomly.
   ```
   ros2 run unity_robotics_demo color_publisher
   ```
-- **TestRosService**: Throughout this test, the cube in the Unity scene is constantly being moved around until it reaches a randomly set target destination. Once the target destination is reached, a service call is sent to the rosagent, requesting a new destination position. Start the service running on the rosagent via the command below (Note: This service must be started before starting the game in Unity!).
+- **TestRosService**: Throughout this test, the cube in the Unity scene is constantly being moved around until it reaches a randomly set target destination. Once the target destination is reached, a service call is sent to the rosagent, requesting a new destination position. Start the service running on the rosagent via the command below (Note: This service must be started before starting the game in Unity).
   ```
   ros2 run unity_robotics_demo position_service
   ```
-- **TestUnityService**: This test allows the rosagent to make requests to the unityagent. The command below sends a request to the unityagent, which response with a pose message that is printed in the caller terminal.
+- **TestUnityService**: This test allows the rosagent to make requests to the unityagent. The command below sends a request to the unityagent, which responds with a pose message that is printed in the caller terminal.
   ```
   ros2 service call obj_pose_srv unity_robotics_demo_msgs/ObjectPoseService "{object_name: Cube}"
   ```
@@ -88,4 +89,4 @@ In reading the logs, you should easily be able to identify the ongoings of the s
 ### DemoScene walk-through
 Once you have successfully set up the data stream between Unity and your headset, you can start exploring the demo scene. You can check the logs printed to the Unity Editor terminal at any given moment to inspect the actions taken by the unityagent.
 
-The DemoScene provides you with a connect menu that is located directly in front of you on start-up. Just click the connect button with the controllers of your headset to connect the unityagent to the rosrouter. A new menu with all connected rosagents and unityagents will open up. You can now start the communication with the rosagents online on the MAN simply by clicking the Start buttons. One menu can be opened for every connected rosagent. This menu allows you to stream random image data from a selected rosagent to your headset on the one hand. On the other hand, you can publish pose data of the cube that is located on the ground right in front of your feet to the connected rosagents (grab the cube with one of the two controllers). It is important to note that there is only one image publisher and one pose subscriber running on the ROS side. Therefore, every rosagent streams the same image to the Unity scene and logs the same pose data to the terminal running the docker container fleet. To stop streaming or sending to a specific rosagent, click the Stop button on the connected agents menu in front of you. To stop the whole demo, click the Disconnect button. It is also possible to stop the demo from the Unity Editor by clicking on the button to stop the game.
+The DemoScene provides you with a connect menu that is located directly in front of you on start-up. Just click the connect button with the controllers of your headset to connect the unityagent to the rosrouter. A new menu with all connected rosagents and unityagents will open up. You can now start the communication with the rosagents online on the MAN simply by clicking the Start buttons. One menu can be opened for every connected rosagent. This menu allows you to stream random image data from a selected rosagent to your headset on the one hand. On the other hand, you can publish pose data of the cube that is located on the ground right in front of your feet to the connected rosagents (grab the cube with one of the two controllers to change its pose). It is important to note that there is only one image publisher and one pose subscriber running on the ROS side. Therefore, every rosagent streams the same image to the Unity scene and logs the same pose data to the terminal running the docker container fleet. To stop streaming or sending to a specific rosagent, click the Stop button on the connected agents menu in front of you. To stop the whole demo, click the Disconnect button. It is also possible to stop the demo from the Unity Editor by clicking the stop game button.
