@@ -8,7 +8,13 @@ The code stored in this directory of the repo represents the Unity side of the R
 To be able to create a Unity project from the code of this repo you must first:
 - **Download and install the Unity Hub** (https://unity.com/download): The Unity Hub is a program designed to help developers manage their Unity projects effectively. It allows different versions of Unity to be installed so that a specific version can be selected for working on your projects. It also provides easy installation options if additional modules are needed for a project later in development, which is not possible when installing a Unity editor via platform-specific executables.
 - **Install a Unity Editor**: The Unity Editor is software that allows you to create your Unity applications. After opening Unity Hub on your computer, click on "Installs" on the left menu bar and then click "Install Editor." Install one of the recommended LTS versions. If you decide to install an older version, visit theUnity download archive to find the version you need. It is essential that you select the download for Unity Hub option on this page. Using platform-specific installer executables prevents the downloaded Unity Editor from being extended with additional modules after installation.
-- **Create a Unity project from the code in this repo**: *Try out how this can be done...*
+- **Create a Unity project from the code in this repo**:
+    - Clone this repo
+    - Open the Unity Editor and click on Open
+    - Navigate to the root directory of the cloned repo and open the unity directory
+    - The Unity Editor opens and starts configuring the project
+    - After the Unity Editor has configured the project successfully, you are ready to go
+    - If you want to run the test or demo scene, double click on the respective .unity file in the directory unity/Assets/Scenes/
 
 ## Working on the project
 
